@@ -110,7 +110,7 @@ void tambahServicePointer(RegisterUser *u){
     u->JumlahService++;
 }
 
-// soal untuk descending pengurutan huruf
+// soal untuk descending pengurutan huruf bubble sort
 void sortingNamaDescending(){
     for(int i = 0; i < JumlahUser - 1; i++){
         for(int j = 0; j < JumlahUser - i - 1; j++){
@@ -121,14 +121,33 @@ void sortingNamaDescending(){
     }
 }
 
-// soal ascending pengurutan angka
+// soal ascending pengurutan angka insertion sort
 void sortingBiayaAscending(int userIndex){
-    for(int i = 0; i < user[userIndex].JumlahService - 1; i++){
-        for(int j = 0; j < user[userIndex].JumlahService - i - 1; j++){
-            if(user[userIndex].service[j].biaya > user[userIndex].service[j+1].biaya){
-                swap(user[userIndex].service[j], user[userIndex].service[j+1]);
-            }
+    for(int i = 1; i < user[userIndex].JumlahService; i++){
+        serviceLaptop key = user[userIndex].service[i];
+        int j = i - 1;
+
+        while(j >= 0 && user[userIndex].service[j].biaya > key.biaya){
+            user[userIndex].service[j+1] = user[userIndex].service[j];
+            j--;
         }
+
+        user[userIndex].service[j+1] = key;
+    }
+}
+
+// pengurutan nama ascending menggunakan selection sort
+void selectionSortNamaAscending(){
+    for(int i = 0; i < JumlahUser - 1; i++){
+        int minIndex = i;
+
+        for(int j = i + 1; j < JumlahUser; j++){
+            if(user[j].nama < user[minIndex].nama){
+                minIndex = j;
+            }   
+        }
+
+        swap(user[i], user[minIndex]);
     }
 }
 
@@ -325,7 +344,8 @@ int main(){
                     cout << "|3. Tambah Biaya Service       |" << endl;
                     cout << "|4. Urutan Nama User (Z-A)     |" << endl;
                     cout << "|5. Biaya Service dari Terendah|" << endl;
-                    cout << "|6. Keluar                     |" << endl;
+                    cout << "|6. BUrutan Nama User (A-Z)    |" << endl;
+                    cout << "|7. Keluar                     |" << endl;
                     cout << "|==============================|" << endl;
                     cout << "admin pilih yang mana : "; 
                     cin >> menuAdmin;
@@ -456,33 +476,43 @@ int main(){
                                 cout << "BELUM ADA USER YANG TERDAFTAR" << endl;
                                 break;
                             }
-                            bool adaservice = false;
 
                             int pilihUser;
                             cout << "Pilih User : ";
                             cin >> pilihUser;
 
                             sortingBiayaAscending(pilihUser-1);
-                            cout << "Biaya service berhasil diurutkan (kecil ke besar)" << endl;
+
+                            cout << "Biaya service berhasil diurutkan (Ascending - Insertion Sort)" << endl;
 
                             cout << "=== HASIL SORTING BIAYA ===" << endl;
                             for(int i = 0; i < user[pilihUser-1].JumlahService; i++){
                                 cout << i+1 << ". "
                                     << user[pilihUser-1].service[i].MerekLaptop
-                                    << " - Rp " 
+                                    << " - Rp "
                                     << user[pilihUser-1].service[i].biaya << endl;
                             }
                             break;
                         }
 
                         case 6:{
+                            selectionSortNamaAscending();
+                            cout << "Nama user diurutkan (A-Z - Selection Sort)" << endl;
+
+                            for(int i = 0; i < JumlahUser; i++){
+                                cout << i+1 << ". " << user[i].nama << endl;
+                            }
+                            break;
+                        }
+
+                        case 7:{
                             cout << "Admin keluar dulu." << endl;
                             break;
                         }default:{
                             cout << "GAK ADA PILIHAN" << endl;
                         }
                     }
-                }while(menuAdmin != 6);
+                }while(menuAdmin != 7);
 
             }
             else{
